@@ -1,0 +1,39 @@
+{
+  "name": "appium-ios-beginner",
+  "version": "1.0.0",
+  "description": "Beginner Appium iOS project with WebdriverIO",
+  "main": "index.js",
+  "scripts": {
+    
+    "test": "npx wdio run ./wdio.conf.js",
+
+    
+    "wdio": "npx wdio run ./wdio.conf.js",
+
+    
+    "ci:prepare": "npx appium driver install xcuitest",
+
+    
+    "ci:download-app": "mkdir -p apps && curl -L -o apps/iOS.Simulator.SauceLabs.Mobile.Sample.app.2.7.1.zip https://github.com/saucelabs/sample-app-mobile/releases/download/2.7.1/iOS.Simulator.SauceLabs.Mobile.Sample.app.2.7.1.zip && unzip -o apps/iOS.Simulator.SauceLabs.Mobile.Sample.app.2.7.1.zip -d apps"
+  },
+  "keywords": [
+    "appium",
+    "webdriverio",
+    "ios",
+    "automation",
+    "beginner"
+  ],
+  "author": "Josh",
+  "license": "ISC",
+  "devDependencies": {
+    "@wdio/appium-service": "^9.20.0",
+    "@wdio/cli": "^9.20.0",
+    "@wdio/local-runner": "^9.20.0",
+    "@wdio/mocha-framework": "^9.20.0",
+    "@wdio/spec-reporter": "^9.20.0",
+    "appium": "^3.1.0",
+    "appium-xcuitest-driver": "^10.4.3",
+    "expect-webdriverio": "^5.4.3",
+    "mocha": "^10.6.0"
+  }
+}
