@@ -9,22 +9,27 @@ exports.config = {
   connectionRetryTimeout: 120000,
   connectionRetryCount: 3,
 
-  // Use Sauce service (reads SAUCE_USERNAME/SAUCE_ACCESS_KEY from env)
+  // --- Explicit Sauce creds + endpoint (region us-west-1) ---
+  user: process.env.SAUCE_USERNAME,            // e.g., StarPatria
+  key: process.env.SAUCE_ACCESS_KEY,           // your long access key
+  hostname: 'ondemand.us-west-1.saucelabs.com',
+  port: 443,
+  protocol: 'https',
+  path: '/wd/hub',
+
+  // You can keep (or remove) the service; explicit host settings take precedence.
   services: [['sauce', { region: 'us-west-1' }]],
 
-  // Run on Sauce iOS Simulator
   capabilities: [{
     platformName: 'iOS',
     'appium:automationName': 'XCUITest',
-    // pick any supported combo; "latest" keeps you evergreen
     'appium:platformVersion': 'latest',
     'appium:deviceName': 'iPhone 15 Simulator',
-    // use the file we just uploaded
+    // Must match EXACTLY the file name in Sauce storage (case-sensitive)
     'appium:app': 'sauce-storage:SwagLabsSim.zip',
-    // optional niceties
     'sauce:options': {
       name: 'Appium iOS E2E – Login + Menu + Logout',
-      build: `local-${new Date().toISOString().slice(0,10)}`,
+      build: `CI-${new Date().toISOString().slice(0,10)}`,
       deviceOrientation: 'portrait'
     }
   }],
