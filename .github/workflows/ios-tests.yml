@@ -4,21 +4,56 @@ on:
   workflow_dispatch:
   push:
     branches: [ main ]
+    paths:
+      - "**/*.js"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/ios-e2e.yml"
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  ios-e2e:
+  wdio:
     runs-on: ubuntu-latest
+
+    env:
+      # <-- set these in your repo Settings > Secrets and variables > Actions
+      SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
+      SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
+      SAUCE_REGION: us-west-1     # matches your storage region
+      NODE_OPTIONS: --max-old-space-size=4096
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
+          cache: "npm"
 
-      - run: npm ci
+      # Use npm install (works even if you don't commit a lockfile)
+      - name: Install deps
+        run: npm install --no-audit --no-fund
 
-      - name: Run WDIO on Sauce
-        env:
-          SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
-          SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
-        run: npx wdio run wdio.conf.js
+      - name: Show versions
+        run: |
+          node -v
+          npm -v
+          npx wdio --version
+
+      - name: Run WDIO tests
+        run: npx wdio run ./wdio.conf.js
+
+      - name: Upload test artifacts (always)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wdio-artifacts
+          path: |
+            ./wdio-*.log
+            ./reports/**
+            ./allure-results/**
+            ./menu_not_open.png
+          if-no-files-found: ignore
