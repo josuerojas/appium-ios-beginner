@@ -12,18 +12,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Step 2: Setup Node.js
+      # Step 2: Setup Node.js (no cache)
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
 
-      # Step 3: Install dependencies (no lockfile needed)
+      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install --no-fund --no-audit
 
-      # Step 4: Debug environment info (optional, but helpful)
+      # Step 4: Debug info
       - name: Display environment info
         run: |
           node -v
