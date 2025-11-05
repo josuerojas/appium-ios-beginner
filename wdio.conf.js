@@ -10,7 +10,7 @@ exports.config = {
   connectionRetryCount: 3,
 
   // Use Sauce service (reads SAUCE_USERNAME/SAUCE_ACCESS_KEY from env)
-  services: ['sauce'],
+  services: [['sauce', { region: 'us-west-1' }]],
 
   // Run on Sauce iOS Simulator
   capabilities: [{
