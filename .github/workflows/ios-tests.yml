@@ -1,26 +1,24 @@
-name: iOS Appium Tests
+name: iOS E2E on Sauce
 
 on:
-  workflow_dispatch: # Allows manual trigger in GitHub Actions tab
+  workflow_dispatch:
+  push:
+    branches: [ main ]
 
 jobs:
-  test-ios:
-    runs-on: macos-latest
-
+  ios-e2e:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '20'
 
-      - name: Install dependencies
-        run: npm install
+      - run: npm ci
 
-      - name: Verify Appium installation
-        run: npx appium driver list
-
-      - name: Run WDIO Tests
-        run: npx wdio run ./wdio.conf.js
+      - name: Run WDIO on Sauce
+        env:
+          SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
+          SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
+        run: npx wdio run wdio.conf.js
